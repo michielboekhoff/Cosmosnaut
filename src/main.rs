@@ -1,6 +1,12 @@
 use std::{collections::HashMap, sync::Arc};
 
-use axum::{async_trait, extract::State, http::StatusCode, routing::post, Json, Router};
+use axum::{
+    async_trait,
+    extract::{FromRef, State},
+    http::StatusCode,
+    routing::post,
+    Json, Router,
+};
 use serde::Deserialize;
 use thiserror::Error;
 use tokio::sync::Mutex;
@@ -64,11 +70,17 @@ impl<S: Store> Clone for AppState<S> {
     }
 }
 
+impl<T: Store> FromRef<AppState<T>> for Arc<Mutex<T>> {
+    fn from_ref(input: &AppState<T>) -> Self {
+        input.database_store.clone()
+    }
+}
+
 async fn create_database<T: Store>(
-    State(svc): State<AppState<T>>,
+    State(svc): State<Arc<Mutex<T>>>,
     Json(payload): Json<CreateDatabaseRequest>,
 ) -> StatusCode {
-    let mut x = svc.database_store.lock().await;
+    let mut x = svc.lock().await;
     match x.create_database(payload.id).await {
         Ok(_) => StatusCode::OK,
         Err(DatabaseError::DatabaseExists(_)) => StatusCode::BAD_REQUEST,
