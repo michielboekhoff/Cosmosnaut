@@ -44,7 +44,7 @@ impl Store for HashMapStore {
         if self.entries.contains_key(&id) {
             Err(DatabaseError::DatabaseExists(id))
         } else {
-            self.entries.insert(id.clone(), Database { id: id.clone() });
+            self.entries.insert(id.clone(), Database { id });
             Ok(())
         }
     }
