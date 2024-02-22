@@ -13,6 +13,7 @@ use azure_data_cosmos::{
 use cosmosnaut::app;
 use reqwest::header::HeaderMap as ReqwestHeaderMap;
 
+use assertor::*;
 use futures::TryStreamExt;
 use futures_core::Stream;
 use url::Url;
@@ -70,9 +71,6 @@ impl HttpClient for CosmosTestClient {
                 .map_err(|error| azure_core::error::Error::full(ErrorKind::Io, error, "")),
         );
 
-        // println!("b: {}", response.text().await.unwrap());
-
-        // Err(azure_core::error::Error::new(ErrorKind::Io, ""))
         return Ok(azure_core::Response::new(
             StatusCode::Created,
             response_headers,
@@ -119,8 +117,9 @@ async fn create_database() -> Result<(), Box<dyn Error>> {
         .create_database("my_awesome_db")
         .consistency_level(ConsistencyLevel::Strong)
         .into_future()
-        .await
-        .expect("Expect database creation to succeed");
+        .await;
+
+    assert_that!(_database_creation_result).is_ok();
 
     Ok(())
 }
