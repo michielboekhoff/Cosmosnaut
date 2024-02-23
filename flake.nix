@@ -40,10 +40,13 @@
 
           buildInputs = [
             # Add additional build inputs here
+						pkgs.openssl
           ] ++ lib.optionals pkgs.stdenv.isDarwin [
             # Additional darwin specific inputs can be set here
             pkgs.libiconv
           ];
+
+					nativeBuildInputs = with pkgs; [ pkg-config openssl ];
 
           # Additional environment variables can be set directly
           # MY_CUSTOM_VAR = "some value";
@@ -134,8 +137,6 @@
           packages = with pkgs; [
             # pkgs.ripgrep
 						rust-analyzer
-						openssl
-						pkg-config
 						gdb
           ];
         };

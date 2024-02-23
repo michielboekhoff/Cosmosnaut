@@ -1,4 +1,13 @@
 [licenses]
+allow-osi-fsf-free = "both"
 allow = [
-  "MIT"
+	"Unicode-DFS-2016",
+	"LicenseRef-ring",
+]
+
+[[licenses.clarify]]
+name = "ring"
+expression = "LicenseRef-ring"
+license-files = [
+    { path = "LICENSE", hash = 0xbd0eed23 },
 ]

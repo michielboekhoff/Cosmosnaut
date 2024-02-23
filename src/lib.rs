@@ -25,7 +25,7 @@ pub trait Store {
 }
 
 struct Database {
-    pub id: String,
+    pub _id: String,
 }
 
 struct HashMapStore {
@@ -46,7 +46,7 @@ impl Store for HashMapStore {
         if self.entries.contains_key(&id) {
             Err(DatabaseError::DatabaseExists(id))
         } else {
-            self.entries.insert(id.clone(), Database { id });
+            self.entries.insert(id.clone(), Database { _id: id });
             Ok(())
         }
     }
